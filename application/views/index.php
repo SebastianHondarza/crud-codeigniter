@@ -2,7 +2,39 @@
 	jQuery(document).ready(function($) {
 		$('#btnNuevo').click(function(event) {
 			event.preventDefault();
+			$('#txtId').val('');
+			$('#txtNombre').val('');
+			$('#txtApellido').val('');
 			$('#modal-nuevo').modal('show');
+		});
+
+		$('.btnEliminar').click(function(event) {
+			event.preventDefault();
+			var ruta = $(this).attr('href');
+			if (confirm("Desea borrar este registro?")) {
+				location.href=ruta;
+			}
+		});
+
+		$('.btnModificar').click(function(event) {
+			event.preventDefault();
+			var id = this.id;
+			$.ajax({
+				url: '<?php echo base_url();?>/portada/get_user/'+id,
+				type: 'POST',
+				dataType: 'JSON',
+				data: {
+
+				},
+				cache: false,
+				success: function (data){
+					$('#txtNombre').val(data.nombre);
+					$('#txtApellido').val(data.apellido);
+					$('#txtId').val(id);
+					$('#modal-nuevo').modal('show');
+				}
+			});
+			
 		});
 	});
 </script>
@@ -40,12 +72,10 @@
 		 	echo "<td>".$key->id."</td>";			
 		 	echo "<td>".$key->nombre."</td>";
 		 	echo "<td>".$key->apellido."</td>";
-		 	echo "<td><button id='$key->id' class='btnVer btn btn-xs btn-info'>Ver</button>";
-		 	echo "&nbsp;";
-
+		 	echo "<td>";
 		 	echo "<button id='$key->id' class='btnModificar btn btn-xs btn-warning'>Modificar</button>";
 		 	echo "&nbsp;";
-		 	echo "<button id='$key->id' class='btnEliminar btn btn-xs btn-danger'>Eliminar</button></td>";
+		 	echo "<a href='".base_url()."/portada/eliminar/".$key->id."' id='$key->id' class='btnEliminar btn btn-xs btn-danger'>Eliminar</a></td>";
 			echo "</tr>";
 
 		 } ?>
@@ -65,6 +95,7 @@
       </div>
       <div class="modal-body">
       	<form class="form-horizontal" method="POST" action="<?php echo base_url();?>portada/guardar">
+      		<input type="hidden" name="txtId" id="txtId" readonly="">
       		<div class="form-group">
       			<label class="control-label col-sm-2" for="txtNombre">Nombre:</label>
       			<div class="col-sm-10">
