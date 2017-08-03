@@ -39,4 +39,10 @@ class Usuario_model extends CI_Model {
       $rs = $consulta->result();
       return $rs;
    }
+
+   public function buscador($dato){
+      $this->db->like("nombre",$dato);
+      $consulta = $this->db->get("tbl_usuario");
+      return $consulta->result();
+   }
 }

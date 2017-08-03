@@ -2,6 +2,7 @@
 if (!defined('BASEPATH'))
    exit('No direct script access allowed');
 class Portada extends CI_Controller { 
+
    	public function index(){
    		$arr=array();
    		$this->load->model('Usuario_model');
@@ -9,6 +10,15 @@ class Portada extends CI_Controller {
 		$this->load->view('header');
 		$this->load->view('index',$data);
 		$this->load->view('footer');
+    }
+
+    public function buscador(){
+    	if ($this->input->is_ajax_request()) {
+    		$buscar = $this->input->post("buscar");
+	    	$this->load->model("Usuario_model");
+	    	$rs=$this->Usuario_model->buscador($buscar);
+	    	echo json_encode($rs);
+    	}
     }
 
     public function guardar(){
